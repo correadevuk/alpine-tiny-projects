@@ -10,16 +10,34 @@
 </head>
 
 <body>
-    <!-- state object with the x-data directive which makes the state available within the component scope -->
-    <div class="container mx-auto p-4" x-data="{count: 0}">
-        <div class="space-x-2">
-            <!-- listen to click events with x-on or @click  -->
-            <button @click="count--" class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold">-1</button>
-            <button @click="count++" class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold">+1</button>
+
+    <!-- class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold" -->
+    <div x-data="{activeTab: 0}" class="container mx-auto py-6" x-data="{activeTab: 0}">
+        <div class="mb-6 space-x-2">
+            <button @click="activeTab = 0" :class="activeTab === 0 ? 'bg-red-500' : 'bg-indigo-500'"
+                class="rounded py-1 px-4 text-white font-semibold">Tab
+                1</button>
+            <button @click="activeTab = 1" :class="activeTab === 1 ? 'bg-red-500' : 'bg-indigo-500'"
+                class="rounded py-1 px-4 text-white font-semibold">Tab
+                2</button>
+            <button @click="activeTab = 2" :class="activeTab === 2 ? 'bg-red-500' : 'bg-indigo-500'"
+                class="rounded py-1 px-4 text-white font-semibold">Tab
+                3</button>
         </div>
-        <p>The current count is <strong x-text="count" class="text-4xl font-extrabold"></strong>.</p>
-        <button @click="count=0">reset</button>
+        <!-- <pre x-text="activeTab"></pre> -->
+        <div class="space-y-4">
+            <div x-show="activeTab === 0">
+                <p>I am the content of tab number one, and I think I just won! 🏆</p>
+            </div>
+            <div x-show="activeTab === 1">
+                <p>Heya! I root for number two, and so should you! ❤️</p>
+            </div>
+            <div x-show="activeTab === 2">
+                <p>Haha nice one, but I am number three, and now it's all about me! 😎</p>
+            </div>
+        </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 </body>
