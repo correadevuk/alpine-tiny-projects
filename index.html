@@ -9,19 +9,102 @@
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body>
-    <!-- state object with the x-data directive which makes the state available within the component scope -->
-    <div class="container mx-auto p-4" x-data="{count: 0}">
-        <div class="space-x-2">
-            <!-- listen to click events with x-on or @click  -->
-            <button @click="count--" class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold">-1</button>
-            <button @click="count++" class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold">+1</button>
-        </div>
-        <p>The current count is <strong x-text="count" class="text-4xl font-extrabold"></strong>.</p>
-        <button @click="count=0">reset</button>
-    </div>
+<style>
+    .spinner {
+        -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+        animation: sk-scaleout 1s infinite ease-in-out;
+    }
 
+    @-webkit-keyframes sk-scaleout {
+        0% {
+            -webkit-transform: scale(0);
+        }
+
+        100% {
+            -webkit-transform: scale(1);
+            opacity: 0;
+        }
+    }
+
+    @keyframes sk-scaleout {
+        0% {
+            -webkit-transform: scale(0);
+            transform: scale(0);
+        }
+
+        100% {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            opacity: 0;
+        }
+    }
+</style>
+
+
+<body>
+    <div class="container mx-auto p-4" x-data="dogFetcher()" x-init="init">
+        <!-- < !-- Search field -->
+        <label>What breed?</label>
+        <input type="text" x-model.debounce.750="breed" class="mb-6">
+        <!-- < !-- API error -->
+        <template x-if="fetchStatus === 'error'">
+            <p class="bg-red-100 border border-red-200 py-3 px-6 rounded">There was something wrong with the API
+                call,
+                please try again.</p>
+        </template>
+        <!-- < !-- Empty search field value -->
+        <p x-show="!breed" class="bg-blue-100 border border-blue-200 py-3 px-6 rounded">Let's go fetch some pups!</p>
+
+        <!-- < !-- Fetching dog breed -->
+        <div x-show="fetchStatus === 'loading'" class="w-12 h-12 bg-gray-300 rounded-full spinner"></div>
+        <template x-if="breed && fetchStatus === 'idle'">
+            <div>
+                <!-- < !-- Failed search -->
+                <template x-if="data.status === 'error'">
+                    <p x-text="data.message" class="bg-red-100 border border-red-200 py-3 px-6 rounded"></p>
+                </template>
+                <!-- < !-- Puppy pic ! ! -->
+                <template x-if="data.status === 'success'">
+                    <img :src="data.message" alt="cute pup" />
+                </template>
+            </div>
+        </template>
+    </div>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script>
+        function dogFetcher() {
+            return {
+                breed: 'corgi',
+                fetchStatus: 'loading',
+                data: null,
+                init() {
+                    this.$watch('breed', () => {
+                        this.fetchDogs();
+                    });
+                    this.fetchDogs();
+                },
+                fetchDogs() {
+                    this.fetchStatus = 'loading',
+                        fetch(`https://dog.ceo/api/breed/${this.breed}/images/random`)
+                            .then(res => {
+                                if (!res.ok) {
+                                    this.fetchStatus = 'error'
+                                }
+                                return res.json()
+                            })
+                            .then(data => {
+                                this.fetchStatus = 'idle'
+                                this.data = data
+                            })
+                            .catch(error => {
+                                this.fetchStatus = 'error'
+                                console.log({ error })
+                            })
+                }
+            }
+        }
+    </script>
+
 </body>
 
 </html>
