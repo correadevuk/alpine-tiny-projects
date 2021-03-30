@@ -11,14 +11,11 @@
 
 <body>
     <!-- state object with the x-data directive which makes the state available within the component scope -->
-    <div class="container mx-auto p-4" x-data="{count: 0}">
-        <div class="space-x-2">
-            <!-- listen to click events with x-on or @click  -->
-            <button @click="count--" class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold">-1</button>
-            <button @click="count++" class="bg-indigo-400 rounded py-1 px-4 text-white font-semibold">+1</button>
-        </div>
-        <p>The current count is <strong x-text="count" class="text-4xl font-extrabold"></strong>.</p>
-        <button @click="count=0">reset</button>
+    <div class="container mx-auto p-4" x-data="{name: ''}">
+        <label for="">Your name</label>
+        <!-- <input type="text" :value="name" @input="name = $event.target.value"> -->
+        <input type="text" x-model="name">
+        <p>Hi, my name is <span x-text="name || '______________'"></span>!👋</p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
