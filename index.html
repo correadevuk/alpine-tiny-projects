@@ -10,14 +10,15 @@
 </head>
 
 <body>
-    <!-- state object with the x-data directive which makes the state available within the component scope -->
-    <div class="container mx-auto p-4" x-data="{name: ''}">
+    <!-- x-init runs just before Alpine JS performs initial updates to the DOM -->
+    <!-- If you pass x-init's callback function, it will wait until the initial DOM updates are made before running. -->
+    <!-- <div class="container mx-auto p-4" x-data="{name: 'Vitor'}" x-init="() => $refs.nameInput.focus()"> -->
+    <div class="container mx-auto p-4" x-data="{name: ''}" x-init="$refs.nameInput.focus()">
         <label for="">Your name</label>
-        <!-- <input type="text" :value="name" @input="name = $event.target.value"> -->
         <input type="text" x-model="name" x-ref="nameInput">
         <p>Hi, my name is <span x-text="name || '______________'"></span>!👋</p>
-        <button class="mr-5 mt-4 bg-blue-700 text-white border border-blue-700 font-bold py-2 px-6 rounded-lg"
-            @click="$refs.nameInput.focus()">Focus</button>
+        <!-- <button class="mr-5 mt-4 bg-blue-700 text-white border border-blue-700 font-bold py-2 px-6 rounded-lg"
+            @click="$refs.nameInput.focus()">Focus</button> -->
     </div>
 
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
